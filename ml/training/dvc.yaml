@@ -1,0 +1,113 @@
+# 🎵 RagaSense DVC Pipeline
+# Proper ML pipeline following best practices
+
+stages:
+  # Stage 1: Data Validation and Quality Control
+  data_validation:
+    cmd: python ragasense_data_pipeline_v1.0.py --stage validation
+    deps:
+    - ../data/carnatic-hindustani/
+    - ../data/saraga_extracted/
+    - ../data/youtube/
+    - ragasense_data_pipeline_v1.0.py
+    outs:
+    - ../data/validated/quality_report.json
+    - ../data/validated/validation_metrics.json
+    metrics:
+    - ../data/validated/quality_score.json
+    params:
+    - data_validation_threshold
+    - min_audio_duration
+    - max_audio_duration
+
+  # Stage 2: Audio Feature Extraction
+  feature_extraction:
+    cmd: python ragasense_data_pipeline_v1.0.py --stage features
+    deps:
+    - ../data/validated/
+    - ragasense_data_pipeline_v1.0.py
+    outs:
+    - ../data/features/mfcc_features.npy
+    - ../data/features/spectral_features.npy
+    - ../data/features/chroma_features.npy
+    - ../data/features/feature_metadata.json
+    metrics:
+    - ../data/features/extraction_metrics.json
+    params:
+    - sample_rate
+    - n_mfcc
+    - hop_length
+
+  # Stage 3: Data Preprocessing and Splitting
+  data_preprocessing:
+    cmd: python ragasense_data_pipeline_v1.0.py --stage preprocessing
+    deps:
+    - ../data/features/
+    - ragasense_data_pipeline_v1.0.py
+    outs:
+    - ../data/processed/train_features.npy
+    - ../data/processed/train_labels.npy
+    - ../data/processed/val_features.npy
+    - ../data/processed/val_labels.npy
+    - ../data/processed/test_features.npy
+    - ../data/processed/test_labels.npy
+    - ../data/processed/label_mapping.json
+    metrics:
+    - ../data/processed/preprocessing_metrics.json
+    params:
+    - train_split
+    - val_split
+    - test_split
+    - random_seed
+
+  # Stage 4: Model Training
+  model_training:
+    cmd: python ragasense_model_trainer_v1.0.py
+    deps:
+    - ../data/processed/
+    - ragasense_model_trainer_v1.0.py
+    outs:
+    - ../ml/models/raga_classifier_cnn_v1.0.pt
+    - ../ml/models/training_history.json
+    metrics:
+    - ../ml/models/training_metrics.json
+    - ../ml/models/validation_metrics.json
+    params:
+    - model_type
+    - learning_rate
+    - batch_size
+    - epochs
+    - early_stopping_patience
+
+  # Stage 5: Model Evaluation
+  model_evaluation:
+    cmd: python ragasense_model_evaluator_v1.0.py
+    deps:
+    - ../ml/models/raga_classifier_cnn_v1.0.pt
+    - ../data/processed/test_features.npy
+    - ../data/processed/test_labels.npy
+    - ragasense_model_evaluator_v1.0.py
+    outs:
+    - ../ml/results/confusion_matrix.png
+    - ../ml/results/classification_report.json
+    - ../ml/results/performance_metrics.json
+    metrics:
+    - ../ml/results/test_accuracy.json
+    - ../ml/results/f1_score.json
+    - ../ml/results/precision.json
+    - ../ml/results/recall.json
+
+  # Stage 6: Model Inference (Optional)
+  model_inference:
+    cmd: python ../ml/inference/ragasense_inference_v1.0.py
+    deps:
+    - ../ml/models/raga_classifier_cnn_v1.0.pt
+    - ../data/processed/label_mapping.json
+    - ../ml/inference/ragasense_inference_v1.0.py
+    outs:
+    - ../ml/inference/sample_predictions.json
+    metrics:
+    - ../ml/inference/inference_metrics.json
+    params:
+    - inference_batch_size
+    - confidence_threshold

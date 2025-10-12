@@ -773,9 +773,12 @@ class YuEIndianExtension(nn.Module):
         raga_logits = self.final_classifier(combined_features)
         
         return {
-            'total_sections': len(segments),
-            'section_analysis': section_analysis,
-            'performance_type': self._classify_performance_type(section_analysis)
+            'raga_logits': raga_logits,
+            'shruti_analysis': shruti_analysis,
+            'taal_analysis': taal_analysis,
+            'gamaka_analysis': gamaka_analysis,
+            'attention_weights': attention_weights,
+            'yue_embeddings': yue_embeddings
         }
     
     def _segment_performance(self, y: np.ndarray, sr: int, f0: np.ndarray) -> List[Tuple[float, float]]:
@@ -1268,15 +1271,6 @@ def main():
     print()
     
     return system
-
-if __name__ == "__main__":
-    system = main()raga_logits': raga_logits,
-            'shruti_analysis': shruti_analysis,
-            'taal_analysis': taal_analysis,
-            'gamaka_analysis': gamaka_analysis,
-            'attention_weights': attention_weights,
-            'yue_embeddings': yue_embeddings
-        }
     
     def _extract_yue_embeddings(self, audio_features: torch.Tensor) -> torch.Tensor:
         """Extract embeddings from YuE model"""
@@ -1751,4 +1745,10 @@ class AdvancedRagaDetectionSystem:
             })
         
         return {
-            '
+            'total_sections': len(segments),
+            'section_analysis': section_analysis,
+            'performance_type': self._classify_performance_type(section_analysis)
+        }
+
+if __name__ == "__main__":
+    system = main()

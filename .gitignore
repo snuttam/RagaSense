@@ -287,12 +287,15 @@ saved_models/
 *.json
 *.xml
 *.zip
+!*.zip.dvc
 *.tar.gz
 *.rar
 *.7z
 
 # Large datasets
-data/
+data/*
+!data/*.dvc
+!data/README.md
 datasets/
 raw_data/
 processed_data/
@@ -684,7 +687,17 @@ ehthumbs.db
 Thumbs.db
 
 
-#md files
+# Documentation files (managed separately)
+docs/
+*.md
+!README.md
 
-Workspace_Reorganization_Complete.md
-Workspace_Reorganization_Plan.md
+# Root level documentation files (should be in docs/)
+DATASET_SIZE_ANALYSIS.md
+ICMACY_THERAPY_INTEGRATION_SUMMARY.md
+NEXT_STEPS_ACTION_PLAN.md
+RAGA_THERAPY_FEATURE_PLAN.md
+UNIFIED_DATASET_ACTION_PLAN.md
+WORKSPACE_REORGANIZATION_COMPLETE.md
+WORKSPACE_REORGANIZATION_PLAN.md
+youtube_extraction_report.json

@@ -1,0 +1,53 @@
+# 🎵 RagaSense Pipeline Parameters
+# Configuration for DVC pipeline stages
+
+# Data Validation Parameters
+data_validation_threshold: 0.8
+min_audio_duration: 30.0  # seconds
+max_audio_duration: 600.0  # seconds
+
+# Feature Extraction Parameters
+sample_rate: 22050
+n_mfcc: 13
+hop_length: 512
+n_fft: 2048
+n_chroma: 12
+
+# Data Preprocessing Parameters
+train_split: 0.7
+val_split: 0.15
+test_split: 0.15
+random_seed: 42
+
+# Model Training Parameters
+model_type: "cnn"
+learning_rate: 0.001
+batch_size: 32
+epochs: 100
+early_stopping_patience: 10
+weight_decay: 1e-4
+
+# Model Architecture Parameters
+conv_layers: 3
+conv_filters: [32, 64, 128]
+dense_units: [512, 256]
+dropout_rate: 0.5
+
+# Inference Parameters
+inference_batch_size: 16
+confidence_threshold: 0.7
+
+# Data Sources
+data_sources:
+  carnatic_hindustani: "data/carnatic-hindustani/"
+  saraga: "data/saraga_extracted/"
+  youtube: "data/youtube/"
+
+# Output Paths
+output_paths:
+  validated: "data/validated/"
+  features: "data/features/"
+  processed: "data/processed/"
+  models: "ml/models/"
+  results: "ml/results/"
+  inference: "ml/inference/"
