@@ -14,6 +14,8 @@ twitter:description: "Discover and analyze Indian classical music ragas using ad
 
 # RagaSense
 
+> **Note:** This repository was cloned from [adhit-r/RagaSense](https://github.com/adhit-r/RagaSense) on 2026-09-17.
+
 Revolutionary AI platform for Indian classical music classification and generation, powered by state-of-the-art foundation models and comprehensive datasets.
 
 ## Overview
